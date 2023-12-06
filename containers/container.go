@@ -1,6 +1,11 @@
 package containers
 
 import (
+	"os"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/cilium/ebpf/link"
 	"github.com/coroot/coroot-node-agent/cgroup"
 	"github.com/coroot/coroot-node-agent/common"
@@ -17,10 +22,6 @@ import (
 	"github.com/vishvananda/netns"
 	"inet.af/netaddr"
 	"k8s.io/klog/v2"
-	"os"
-	"strings"
-	"sync"
-	"time"
 )
 
 var (
@@ -634,6 +635,8 @@ func (c *Container) onL7Request(pid uint32, fd uint64, timestamp uint64, r *l7.R
 		stats.observe(r.Status.String(), "", r.Duration)
 	case l7.ProtocolRabbitmq, l7.ProtocolNats:
 		stats.observe(r.Status.String(), r.Method.String(), 0)
+	case l7.ProtocolDubbo2:
+		stats.observe(r.Status.String(), "", r.Duration)
 	}
 }
 

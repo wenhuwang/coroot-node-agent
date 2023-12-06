@@ -3,6 +3,7 @@ RUN apt update && apt install -y libsystemd-dev
 COPY go.mod /tmp/src/
 COPY go.sum /tmp/src/
 WORKDIR /tmp/src/
+RUN go env -w GOPROXY=https://goproxy.cn,direct
 RUN go mod download
 COPY . /tmp/src/
 RUN CGO_ENABLED=1 go test ./...
